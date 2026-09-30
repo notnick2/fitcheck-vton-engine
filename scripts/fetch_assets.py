@@ -8,6 +8,7 @@ downloaded for local testing only and are never committed or shipped.
 
 from __future__ import annotations
 
+import time
 import urllib.request
 from pathlib import Path
 
@@ -29,14 +30,27 @@ FILES = {
 }
 
 
+def _download(url: str, attempts: int = 5) -> bytes:
+    for i in range(attempts):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "fitcheck-vton"})
+            with urllib.request.urlopen(req, timeout=60) as r:
+                return r.read()
+        except OSError as e:  # connection resets are common on CI runners
+            if i == attempts - 1:
+                raise
+            print(f"retrying {url} ({e})")
+            time.sleep(2 * (i + 1))
+    raise RuntimeError("unreachable")
+
+
 def main() -> None:
     for rel, url in FILES.items():
         dst = ROOT / rel
         if dst.exists() and dst.stat().st_size > 0:
             continue
         dst.parent.mkdir(parents=True, exist_ok=True)
-        with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "fitcheck-vton"})) as r:
-            dst.write_bytes(r.read())
+        dst.write_bytes(_download(url))
         print("fetched", rel)
     print("assets ready in", ROOT)
 

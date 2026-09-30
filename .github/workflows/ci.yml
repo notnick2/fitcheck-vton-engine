@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 jobs:
   test:
@@ -29,7 +30,8 @@ jobs:
 
   image:
     needs: test
-    if: github.ref == 'refs/heads/main'
+    # Builds the ~10 GB CUDA image; run on demand from the Actions tab.
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       contents: read
