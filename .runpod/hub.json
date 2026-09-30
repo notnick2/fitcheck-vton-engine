@@ -1,0 +1,33 @@
+{
+  "title": "FitCheck VTON Engine",
+  "description": "Virtual try-on: person photo + garment photo -> photoreal try-on. Commercial-safe Qwen-Image-Edit-2511 (Lightning 4-step, FP8) or CatVTON-FLUX, with Apache-2.0 auto-masking, pre-GPU photo QC and native-resolution identity lock.",
+  "type": "serverless",
+  "category": "image",
+  "config": {
+    "runsOn": "GPU",
+    "containerDiskInGb": 90,
+    "gpuIds": "ADA_48_PRO,ADA_80_PRO,AMPERE_80",
+    "gpuCount": 1,
+    "allowedCudaVersions": ["12.8", "12.9", "13.0", "13.1", "13.2"],
+    "presets": [
+      {
+        "name": "Qwen-Image-Edit-2511 Lightning (commercial-safe)",
+        "defaults": { "VTON_ENGINE": "qwen_edit", "VTON_FP8": true, "VTON_FBCACHE": 0 }
+      },
+      {
+        "name": "CatVTON-FLUX (non-commercial license, parity baseline)",
+        "defaults": { "VTON_ENGINE": "catvton_flux", "VTON_FP8": true, "VTON_FBCACHE": 0.08 }
+      }
+    ],
+    "env": [
+      { "key": "VTON_ENGINE", "input": { "name": "Engine", "type": "string", "description": "qwen_edit | catvton_flux | mock", "default": "qwen_edit" } },
+      { "key": "VTON_FP8", "input": { "name": "FP8 transformer", "type": "boolean", "description": "torchao FP8 (needs Ada/Hopper/Blackwell)", "default": true } },
+      { "key": "VTON_FBCACHE", "input": { "name": "First-Block-Cache threshold", "type": "number", "description": "0 = off; 0.05-0.12 trades quality for speed on long schedules", "default": 0, "advanced": true } },
+      { "key": "VTON_COMPILE", "input": { "name": "torch.compile", "type": "boolean", "description": "Faster steady state, slower boot", "default": false, "advanced": true } },
+      { "key": "HF_TOKEN", "input": { "name": "Hugging Face token", "type": "string", "description": "Needed for gated FLUX weights / private bundles", "default": "", "advanced": true } },
+      { "key": "BUCKET_ENDPOINT_URL", "input": { "name": "S3 endpoint URL", "type": "string", "description": "Return image URLs instead of base64", "default": "", "advanced": true } },
+      { "key": "BUCKET_ACCESS_KEY_ID", "input": { "name": "S3 access key", "type": "string", "description": "", "default": "", "advanced": true } },
+      { "key": "BUCKET_SECRET_ACCESS_KEY", "input": { "name": "S3 secret key", "type": "string", "description": "", "default": "", "advanced": true } }
+    ]
+  }
+}

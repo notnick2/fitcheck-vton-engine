@@ -1,0 +1,12 @@
+.venv
+.assets
+.git
+out
+**/__pycache__
+**/*.pyc
+.pytest_cache
+tests
+docs
+pitch
+*.md
+!README.md

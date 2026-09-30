@@ -1,0 +1,47 @@
+{
+  "tests": [
+    {
+      "name": "upper_tryon",
+      "input": {
+        "person_image": "https://huggingface.co/spaces/zhengchong/CatVTON/resolve/main/resource/demo/example/person/women/049713_0.jpg",
+        "garment_image": "https://huggingface.co/spaces/zhengchong/CatVTON/resolve/main/resource/demo/example/condition/upper/21514384_52353349_1000.jpg",
+        "category": "upper",
+        "seed": 42,
+        "output_format": "webp",
+        "return_mask": false
+      },
+      "timeout": 600000
+    },
+    {
+      "name": "rejects_bad_category",
+      "input": {
+        "person_image": "https://huggingface.co/spaces/zhengchong/CatVTON/resolve/main/resource/demo/example/person/women/049713_0.jpg",
+        "garment_image": "https://huggingface.co/spaces/zhengchong/CatVTON/resolve/main/resource/demo/example/condition/upper/21514384_52353349_1000.jpg",
+        "category": "hat",
+        "seed": 42,
+        "output_format": "webp",
+        "return_mask": false
+      },
+      "timeout": 60000
+    }
+  ],
+  "config": {
+    "gpuTypeId": "NVIDIA L40S",
+    "gpuCount": 1,
+    "allowedCudaVersions": [
+      "12.8",
+      "12.9",
+      "13.0"
+    ],
+    "env": [
+      {
+        "key": "VTON_ENGINE",
+        "value": "qwen_edit"
+      },
+      {
+        "key": "VTON_FP8",
+        "value": "true"
+      }
+    ]
+  }
+}

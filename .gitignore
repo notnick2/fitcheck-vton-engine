@@ -1,0 +1,10 @@
+.venv/
+.assets/
+out/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.onnx
+*.onnx.data
+*.plan
+pitch/
